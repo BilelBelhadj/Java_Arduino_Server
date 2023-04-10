@@ -1,4 +1,4 @@
-<!-- HTML page dispplay latest data recieved from the ardino by the server -->
+<!-- HTML page displaying latest data received from the Arduino by the server -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -16,43 +16,90 @@
       #temperature {
         text-align: center;
         font-size: 2em;
-        margin-top: 2em;
+        margin-top: 1em;
       }
       #humidite {
         text-align: center;
         font-size: 2em;
-        margin-top: 2em;
+        margin-top: 1em;
       }
       #device {
         text-align: center;
         font-size: 2em;
+        margin-top: 1em;
+      }
+
+      #temperature1 {
+        text-align: center;
+        font-size: 2em;
+        margin-top: 1em;
+      }
+      #humidite1 {
+        text-align: center;
+        font-size: 2em;
+        margin-top: 1em;
+      }
+      #device1 {
+        text-align: center;
+        font-size: 2em;
+        margin-top: 1em;
+      }
+      #title {
+        text-align: center;
+        font-size: 2em;
         margin-top: 2em;
+        color: blue;
+      }
+      #title1 {
+        text-align: center;
+        font-size: 2em;
+        margin-top: 2em;
+        color: blue;
       }
     </style>
 
   </head>
   <body>
     <h1>Weather Data</h1>
+    <p id="title"></p>
     <p id="temperature"></p>
     <p id="humidite"></p>
     <p id="device"></p>
 
+    <p id="title1"></p>
+    <p id="temperature1"></p>
+    <p id="humidite1"></p>
+    <p id="device1"></p>
+
     <script>
       function getData() {
         var xhr = new XMLHttpRequest();   // Send a GET request to the server
-        xhr.open("GET", "http://192.168.2.91:8080/temperature", true);  //specify the server ip adress with endpoint and port
+        xhr.open("GET", "http://192.168.2.91:8080/temperature", true);  //specify the server ip address with endpoint and port
         xhr.onload = function () {
-          if (xhr.status === 200) {   //if the request is successfully recieved
-
+          if (xhr.status === 200) {   //if the request is successfully received
             //decode the json variable
             console.log(xhr.responseText);
             var data = JSON.parse(xhr.responseText);
-            document.getElementById("temperature").innerHTML =
-              "Temperature: " + data.temperature + "°C";
-            document.getElementById("humidite").innerHTML =
-            "Humidite : " + data.humidite + "%";
-            document.getElementById("device").innerHTML =
-            "Device name : " + data.device;
+            if(data.device === "E1P1"){
+              document.getElementById("title").innerHTML =
+                "Device1: ";
+              document.getElementById("temperature").innerHTML =
+                "Temperature: " + data.temperature + "°C";
+              document.getElementById("humidite").innerHTML =
+              "Humidity : " + data.humidite + "%";
+              document.getElementById("device").innerHTML =
+              "Device name : " + data.device;
+            }
+            if(data.device === "E1P2"){
+              document.getElementById("title1").innerHTML =
+                "Device2: ";
+              document.getElementById("temperature1").innerHTML =
+                "Temperature: " + data.temperature + "°C";
+              document.getElementById("humidite1").innerHTML =
+              "Humidity : " + data.humidite + "%";
+              document.getElementById("device1").innerHTML =
+              "Device name : " + data.device;
+            }
           } else {
             console.log("Request failed.  Returned status of " + xhr.status);   //error message display
           }
@@ -60,9 +107,8 @@
         xhr.send();   //close the connection
       }
 
-      //cal the function every 10 seconds
-      setInterval(getData, 10000);
+      //call the function every 5 seconds
+      setInterval(getData, 500);
     </script>
   </body>
 </html>
-
